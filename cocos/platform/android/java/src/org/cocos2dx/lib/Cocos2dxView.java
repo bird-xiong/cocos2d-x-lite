@@ -38,7 +38,7 @@ public class Cocos2dxView extends FrameLayout {
     private static Activity sContext = null;
     private static Cocos2dxActivityDelegate sCocos2dxActivityDelegate= null;
 
-    protected RelativeLayout mFrameLayout = null;
+    protected FrameLayout mFrameLayout = null;
 
     private Cocos2dxGLSurfaceView mGLSurfaceView = null;
     private int[] mGLContextAttrs = null;
@@ -216,7 +216,6 @@ public class Cocos2dxView extends FrameLayout {
     private void createView() {
         Log.d(TAG, "Cocos2dxActivity onCreate: " + this);
 
-        Utils.setActivity(sContext);
 
         // Workaround in https://stackoverflow.com/questions/16283079/re-launch-of-activity-on-home-button-but-only-the-first-time/16447508
         if (!sContext.isTaskRoot()) {
@@ -227,6 +226,9 @@ public class Cocos2dxView extends FrameLayout {
             Log.w(TAG, "[Workaround] Ignore the activity started from icon!");
             return;
         }
+
+        Utils.setActivity(sContext);
+
 
         Utils.hideVirtualButton();
 
@@ -269,7 +271,7 @@ public class Cocos2dxView extends FrameLayout {
         ViewGroup.LayoutParams frameLayoutParams =
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
-        mFrameLayout = new RelativeLayout(sContext);
+        mFrameLayout = new FrameLayout(sContext);
         mFrameLayout.setLayoutParams(frameLayoutParams);
 
         Cocos2dxRenderer renderer = this.addSurfaceView();
@@ -346,6 +348,10 @@ public class Cocos2dxView extends FrameLayout {
     }
 
     public void onHostDestroy() {
+        if (!sContext.isTaskRoot()) {
+            return;
+        }
+
         if(gainAudioFocus)
             Cocos2dxAudioFocusManager.unregisterAudioFocusListener(sContext);
         Cocos2dxHelper.unregisterBatteryLevelReceiver(sContext);;
