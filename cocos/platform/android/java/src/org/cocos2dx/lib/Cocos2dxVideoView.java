@@ -18,6 +18,7 @@
 
 package org.cocos2dx.lib;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -84,7 +85,8 @@ public class Cocos2dxVideoView extends SurfaceView {
     // recording the seek position while preparing
     private int         mSeekWhenPrepared = 0;
 
-    protected Cocos2dxActivity mCocos2dxActivity = null;
+    protected Activity mCocos2dxActivity = null;
+    protected Cocos2dxActivityDelegate mCocos2dxActivityDelegate = null;
 
     protected int mViewLeft = 0;
     protected int mViewTop = 0;
@@ -115,11 +117,12 @@ public class Cocos2dxVideoView extends SurfaceView {
     // Constructors
     // ===========================================================
 
-    public Cocos2dxVideoView(Cocos2dxActivity activity,int tag) {
-        super(activity);
+    public Cocos2dxVideoView(Cocos2dxActivityDelegate cocos2dxActivityDelegate,int tag) {
+        super(cocos2dxActivityDelegate.getActivity());
 
         mViewTag = tag;
-        mCocos2dxActivity = activity;
+        mCocos2dxActivity = cocos2dxActivityDelegate.getActivity();
+        mCocos2dxActivityDelegate = cocos2dxActivityDelegate;
         initVideoView();
     }
 
@@ -288,8 +291,8 @@ public class Cocos2dxVideoView extends SurfaceView {
 
     public void fixSize() {
         if (mFullScreenEnabled) {
-            mFullScreenWidth = mCocos2dxActivity.getGLSurfaceView().getWidth();
-            mFullScreenHeight = mCocos2dxActivity.getGLSurfaceView().getHeight();
+            mFullScreenWidth = mCocos2dxActivityDelegate.getGLSurfaceView().getWidth();
+            mFullScreenHeight = mCocos2dxActivityDelegate.getGLSurfaceView().getHeight();
 
             fixSize(0, 0, mFullScreenWidth, mFullScreenHeight);
         } else {
