@@ -297,19 +297,19 @@ public class Cocos2dxView extends FrameLayout {
     }
 
     public Cocos2dxGLSurfaceView onCreateView() {
-        Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(sContext);
-        //this line is need on some device if we specify an alpha bits
-        if(this.mGLContextAttrs[3] > 0) glSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-
-        Cocos2dxView.Cocos2dxEGLConfigChooser chooser = new Cocos2dxView.Cocos2dxEGLConfigChooser(this.mGLContextAttrs);
-        glSurfaceView.setEGLConfigChooser(chooser);
-
-        return glSurfaceView;
-
 //        Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(sContext);
-//        // TestCpp should create stencil buffer
-//        glSurfaceView.setEGLConfigChooser(5, 6, 5, 0, 16, 8);
+//        //this line is need on some device if we specify an alpha bits
+//        if(this.mGLContextAttrs[3] > 0) glSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+//
+//        Cocos2dxView.Cocos2dxEGLConfigChooser chooser = new Cocos2dxView.Cocos2dxEGLConfigChooser(this.mGLContextAttrs);
+//        glSurfaceView.setEGLConfigChooser(chooser);
+//
 //        return glSurfaceView;
+
+        Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(sContext);
+        // TestCpp should create stencil buffer
+        glSurfaceView.setEGLConfigChooser(5, 6, 5, 0, 16, 8);
+        return glSurfaceView;
     }
 
 
