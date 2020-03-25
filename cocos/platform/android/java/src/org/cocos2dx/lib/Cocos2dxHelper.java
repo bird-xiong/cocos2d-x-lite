@@ -86,6 +86,7 @@ public class Cocos2dxHelper {
     private static String sPackageName;
     private static String sFileDirectory;
     private static Activity sActivity = null;
+    private static Cocos2dxActivityDelegate activityDelegate = null;
     private static Cocos2dxHelperListener sCocos2dxHelperListener;
     private static Set<OnActivityResultListener> onActivityResultListeners = new LinkedHashSet<OnActivityResultListener>();
     private static Vibrator sVibrateService = null;
@@ -164,13 +165,14 @@ public class Cocos2dxHelper {
     // ===========================================================
 
     public static void runOnGLThread(final Runnable r) {
-        ((Cocos2dxActivity)sActivity).runOnGLThread(r);
+        activityDelegate.runOnGLThread(r);
     }
 
     private static boolean sInited = false;
-    public static void init(final Activity activity) {
+    public static void init(final Cocos2dxActivityDelegate activityDelegate) {
+        Activity activity = activityDelegate.getActivity();
         sActivity = activity;
-        Cocos2dxHelper.sCocos2dxHelperListener = (Cocos2dxHelperListener)activity;
+        Cocos2dxHelper.sCocos2dxHelperListener = activityDelegate;
         if (!sInited) {
 
             PackageManager pm = activity.getPackageManager();
@@ -220,12 +222,12 @@ public class Cocos2dxHelper {
             
             int versionCode = 1;
             try {
-                versionCode = Cocos2dxActivity.getContext().getPackageManager().getPackageInfo(Cocos2dxHelper.getPackageName(), 0).versionCode;
+                versionCode = activity.getPackageManager().getPackageInfo(Cocos2dxHelper.getPackageName(), 0).versionCode;
             } catch (NameNotFoundException e) {
                 e.printStackTrace();
             }
             try {
-                Cocos2dxHelper.sOBBFile = APKExpansionSupport.getAPKExpansionZipFile(Cocos2dxActivity.getContext(), versionCode, 0);
+                Cocos2dxHelper.sOBBFile = APKExpansionSupport.getAPKExpansionZipFile(activity, versionCode, 0);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -333,7 +335,7 @@ public class Cocos2dxHelper {
     }
 
     public static void setKeepScreenOn(boolean value) {
-        ((Cocos2dxActivity)sActivity).setKeepScreenOn(value);
+        activityDelegate.setKeepScreenOn(value);
     }
 
     public static void vibrate(float duration) {
@@ -366,7 +368,7 @@ public class Cocos2dxHelper {
 
  	public static String getVersion() {
  		try {
- 			String version = Cocos2dxActivity.getContext().getPackageManager().getPackageInfo(Cocos2dxActivity.getContext().getPackageName(), 0).versionName;
+ 			String version = Cocos2dxHelper.getActivity().getPackageManager().getPackageInfo(Cocos2dxHelper.getActivity().getPackageName(), 0).versionName;
  			return version;
  		} catch(Exception e) {
  			return "";

@@ -25,6 +25,7 @@ THE SOFTWARE.
 
 package org.cocos2dx.lib;
 
+import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
@@ -45,14 +46,16 @@ import java.util.concurrent.FutureTask;
 public class Cocos2dxVideoHelper {
 
     private RelativeLayout mLayout = null;
-    private Cocos2dxActivity mActivity = null;  
+    private Activity mActivity = null;
+    private Cocos2dxActivityDelegate mCocos2dxActivityDelegate = null;
     private static SparseArray<Cocos2dxVideoView> sVideoViews = null;
     static VideoHandler mVideoHandler = null;
     private static Handler sHandler = null;
     
-    Cocos2dxVideoHelper(Cocos2dxActivity activity,RelativeLayout layout)
+    Cocos2dxVideoHelper(Cocos2dxActivityDelegate cocos2dxActivityDelegate,RelativeLayout layout)
     {
-        mActivity = activity;
+        mActivity = cocos2dxActivityDelegate.getActivity();
+        mCocos2dxActivityDelegate = cocos2dxActivityDelegate;
         mLayout = layout;
         
         mVideoHandler = new VideoHandler(this);
@@ -186,7 +189,7 @@ public class Cocos2dxVideoHelper {
 
         @Override
         public void onVideoEvent(int tag,int event) {
-            mActivity.runOnGLThread(new VideoEventRunnable(tag, event));
+            mCocos2dxActivityDelegate.runOnGLThread(new VideoEventRunnable(tag, event));
         }
     };
 
@@ -200,7 +203,7 @@ public class Cocos2dxVideoHelper {
     }
 
     private void _createVideoView(int index) {
-        Cocos2dxVideoView videoView = new Cocos2dxVideoView(mActivity,index);
+        Cocos2dxVideoView videoView = new Cocos2dxVideoView(mCocos2dxActivityDelegate,index);
         sVideoViews.put(index, videoView);
         FrameLayout.LayoutParams lParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -292,7 +295,7 @@ public class Cocos2dxVideoHelper {
             Cocos2dxVideoView videoView = sVideoViews.get(key);
             if (videoView != null) {
                 videoView.setFullScreenEnabled(false);
-                mActivity.runOnGLThread(new VideoEventRunnable(key, KeyEventBack));
+                mCocos2dxActivityDelegate.runOnGLThread(new VideoEventRunnable(key, KeyEventBack));
             }
         }
     }

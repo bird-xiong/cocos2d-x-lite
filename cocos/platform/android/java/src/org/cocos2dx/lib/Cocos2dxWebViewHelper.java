@@ -25,6 +25,7 @@ THE SOFTWARE.
  ****************************************************************************/
 package org.cocos2dx.lib;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.SparseArray;
@@ -40,17 +41,18 @@ import java.util.concurrent.FutureTask;
 public class Cocos2dxWebViewHelper {
     private static final String TAG = Cocos2dxWebViewHelper.class.getSimpleName();
     private static Handler sHandler;
-    private static Cocos2dxActivity sCocos2dxActivity;
+    private static Activity sCocos2dxActivity;
+    private static Cocos2dxActivityDelegate sCocos2dxActivityDelegate;
     private static RelativeLayout sLayout;
 
     private static SparseArray<Cocos2dxWebView> webViews;
     private static int viewTag = 0;
 
-    public Cocos2dxWebViewHelper(RelativeLayout layout) {
+    public Cocos2dxWebViewHelper(Cocos2dxActivityDelegate cocos2dxActivityDelegate,RelativeLayout layout) {
         Cocos2dxWebViewHelper.sLayout = layout;
         Cocos2dxWebViewHelper.sHandler = new Handler(Looper.myLooper());
-
-        Cocos2dxWebViewHelper.sCocos2dxActivity = (Cocos2dxActivity) Cocos2dxActivity.getContext();
+        sCocos2dxActivityDelegate = cocos2dxActivityDelegate;
+        Cocos2dxWebViewHelper.sCocos2dxActivity = cocos2dxActivityDelegate.getActivity();
         Cocos2dxWebViewHelper.webViews = new SparseArray<Cocos2dxWebView>();
     }
 
@@ -83,7 +85,7 @@ public class Cocos2dxWebViewHelper {
         sCocos2dxActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Cocos2dxWebView webView = new Cocos2dxWebView(sCocos2dxActivity, index);
+                Cocos2dxWebView webView = new Cocos2dxWebView(sCocos2dxActivityDelegate, index);
                 FrameLayout.LayoutParams lParams = new FrameLayout.LayoutParams(
                         FrameLayout.LayoutParams.WRAP_CONTENT,
                         FrameLayout.LayoutParams.WRAP_CONTENT);
