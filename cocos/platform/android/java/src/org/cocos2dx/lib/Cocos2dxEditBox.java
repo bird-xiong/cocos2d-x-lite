@@ -281,11 +281,7 @@ public class Cocos2dxEditBox {
     /***************************************************************************************
      Private functions.
      **************************************************************************************/
-<<<<<<< HEAD
-    private void addItems(Cocos2dxActivity context, FrameLayout layout) {
-=======
-    private void addItems(Activity context, RelativeLayout layout) {
->>>>>>> cocos2dxview_2.1.4
+    private void addItems(Activity context, FrameLayout layout) {
         RelativeLayout myLayout = new RelativeLayout(context);
         this.addEditText(context, myLayout);
         this.addButton(context, myLayout);
