@@ -26,6 +26,7 @@ THE SOFTWARE.
 package org.cocos2dx.lib;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -133,7 +134,13 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
         });
         this.setRenderMode(RENDERMODE_WHEN_DIRTY);
         mCocos2dxRenderer.setPauseInMainThread(true);
-        //super.onPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        boolean isDebug = isDebugMode(getContext());
+        if(!isDebug) super.onDetachedFromWindow();
     }
 
     @Override
@@ -339,5 +346,14 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
         }
         sb.append("]");
         Log.d(Cocos2dxGLSurfaceView.TAG, sb.toString());
+    }
+    public static boolean isDebugMode(Context context) {
+        try {
+            ApplicationInfo info = context.getApplicationInfo();
+            return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
